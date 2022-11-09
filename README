@@ -1,0 +1,182 @@
+use socialNetworkDB
+
+socialNetworkDB> db.createCollection('Users')
+socialNetworkDB> db.createCollection('Posts')
+
+db.Posts.insertOne({
+content: 'MongoDB its amazing',
+category: 'Comments'})
+
+
+14.2.1 INSERTAR DATOS
+
+
+Insertar al menos 15 publicaciones nuevas con almenos 2 comentarios por publicación:
+Title
+Body
+Username
+Comments
+Username
+Body
+
+
+db.Posts.insertMany([
+{Title:"title 1", Body:"post 1", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"},{ Username:"Dani",Body:"You are a pro"}]},
+{Title:"title 2", Body:"post 2", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"},{ Username:"Matias",Body:"good job"}]} ,
+{Title:"title 3", Body:"post 3", Username:"thekano", Comments:[{ Username:"Sofia",Body:"You are a master"}]} ,
+{Title:"title 4", Body:"post 4", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 5", Body:"post 5", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 6", Body:"post 6", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 7", Body:"post 7", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 8", Body:"post 8", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 9", Body:"post 9", Username:"thekano", Comments:[{ Username:"Sofia",Body:"You are a master"}]} ,
+{Title:"title 10", Body:"post 10", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 11", Body:"post 11", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 12", Body:"post 12", Username:"thekano", Comments:[{ Username:"Sofia",Body:"You are a master"}]} ,
+{Title:"title 13", Body:"post 13", Username:"thekano", Comments:[{ Username:"Ger",Body:"You are a master"}]} ,
+{Title:"title 14", Body:"post 14", Username:"thekano", Comments:[{ Username:"Sofia",Body:"Who's gonna carry the boats"}]}, 
+{Title:"title 15", Body:"post 15", Username:"thekano", Comments:[{ Username:"Ger",Body:"keep going"}]}])
+
+
+Insertar al menos 10 nuevos usuarios:
+Username
+Email
+Age
+
+db.Users.insertMany([
+{Username:"GerForeverYoung",Email:"Ger@crack.com",Age:87},
+{Username:"SofiaPinilla",Email:"Sofia@masterlead.com",Age:23},
+{Username:"thekano",Email:"thekano@student.com",Age:25},
+{Username:"mate",Email:"mate@cedrs.com",Age:25},
+{Username:"vicente",Email:"vicent@cedrs.com",Age:25},
+{Username:"kikkonutino",Email:"kikko@cedrs.com",Age:25},
+{Username:"zakiboy",Email:"zaki@cedrs.com",Age:26},
+{Username:"pier",Email:"pier@cedrs.com",Age:25},
+{Username:"juls",Email:"julsss@new.com",Age:20},
+{Username:"tireeddd",Email:"uf@tired.com",Age:35},
+])
+
+
+1.2.2 ACTUALIZAR DATOS
+ 
+Actualizar publicaciones:
+Actualiza todos los campos de una publicación
+
+db.Posts.updateOne({ Title:"title 12" },
+{$set:{Body:"post 12 modified", Username:"thekano", Comments:[{ Username:"Sofia",Body:"Trust me, you are a master"}]}}) 
+
+
+
+Cambiar el body de una publicación.
+db.Posts.updateOne({ Title:"title 14" },{$set: {Body: "post 14 - only body modified" }})
+
+
+Actualizar comentarios:
+Actualiza el comentario de una publicación.
+db.Posts.updateOne({ Title:"title 9" },{$set:{Comments:[{Username:"Anonymous",Body:"Is this a motivational NoSQL exercise???"}]}})
+
+
+Actualizar usuarios:
+Actualiza todos los campos de un usuario
+db.Users.updateMany({Username:"tireeddd"},{$set:{Username:"user changed",Email:"changeddddd@tired.com",Age:28}})
+
+
+Cambiar el email de dos usuarios es decir hacer la query dos veces.
+db.Users.updateOne({Username:"juls"},{$set:{Email:"julsss@changedddddddd.com"}})
+db.Users.updateOne({Username:"GerForeverYoung"},{$set:{Email:"Ger@crackenv2.com"}})
+
+
+
+Aumenta en 5 años la edad de un usuario
+db.Users.updateOne({Username:"GerForeverYoung"},
+
+{
+
+$inc: {
+
+Age: 5
+
+}
+
+})
+
+
+
+
+
+1.2.3 OBTENER DATOS
+
+Seleccionar todas las publicaciones
+db.Posts.find()
+
+
+Selecciona las publicaciones que coincidan con el username indicado
+db.Posts.find({Username: "thekano"})
+
+
+Seleccione todos los usuarios con una edad mayor a 20
+db.Users.find({Age:{$gt:20}})
+
+
+Seleccione todos los usuarios con una edad inferior a 25
+db.Users.find({Age:{$lt:25}})
+
+
+
+Seleccione todos los usuarios que tengan una edad entre 25 y 30 años
+db.Users.find({ $and:[
+
+{Age :{$gt:25}},{Age :{$lt:30}}
+
+]})
+
+
+Muestra los usuarios de edad menor a mayor y viceversa
+db.Users.find().sort({Age:1})
+db.Users.find().sort({Age:-1})
+
+
+
+Seleccione el número total de usuarios
+db.Users.find().count()
+
+
+Seleccione todas las publicaciones y haz que se muestren con la siguiente estructura: Título de la publicación: "title one"
+db.Posts.find().forEach((doc)=> {
+
+print("title number: " + doc.Title)
+
+})
+
+
+Selecciona solo 2 usuarios
+db.Users.find().limit(2)
+
+
+Busca por title 2 publicaciones
+db.Posts.find().limit(2)
+
+
+
+1.2.4 BORRAR DATOS
+
+Elimina a todos los usuarios con una edad mayor a 25
+db.Users.deleteMany({Age:{$gt:25}})
+
+
+// 1.3 Extra - NO ACABADO
+Seleccione el número total de publicaciones que tienen más de un comentario
+db.Posts.updateOne({Title: 'title 5'},{$set: {Comments: [{Body: 'Comment One',User: 'Mary Williams',},{Body: 'Comment Two',User: 'Harry White',}]}})
+db.Posts.updateOne({Title: 'title 6'},{$set: {Comments: [{Body: 'Comment One v2',User: 'Jamesssssss',},{Body: 'Comment Two v2',User: 'Oliverrrrr',}]}})
+
+
+
+Seleccione la última publicación creada
+// deberían tener fecha los posts para ordenar así
+
+
+Selecciona 5 publicaciones y que sean las últimas creadas
+// deberían tener fecha los posts para ordenar así
+
+Elimina todas las publicaciones que tengan más de un comentario
+
