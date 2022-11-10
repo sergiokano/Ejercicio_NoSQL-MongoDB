@@ -154,7 +154,11 @@ db.Users.find().limit(2)
 
 
 Busca por title 2 publicaciones
-db.Posts.find().limit(2)
+db.posts.find({
+    $or: [
+        { title: "title 12" }, { title: "title 14" }
+    ]
+})
 
 
 
@@ -164,19 +168,24 @@ Elimina a todos los usuarios con una edad mayor a 25
 db.Users.deleteMany({Age:{$gt:25}})
 
 
-// 1.3 Extra - NO ACABADO
+1.3 Extra
 Seleccione el número total de publicaciones que tienen más de un comentario
 db.Posts.updateOne({Title: 'title 5'},{$set: {Comments: [{Body: 'Comment One',User: 'Mary Williams',},{Body: 'Comment Two',User: 'Harry White',}]}})
 db.Posts.updateOne({Title: 'title 6'},{$set: {Comments: [{Body: 'Comment One v2',User: 'Jamesssssss',},{Body: 'Comment Two v2',User: 'Oliverrrrr',}]}})
+db.Posts.find({comments : {$exists:true}, $where:'this.comments.length>1'}).count()
 
 
 
 Seleccione la última publicación creada
 // deberían tener fecha los posts para ordenar así
+db.Posts.find().sort({ _id: -1 }).limit(1)
 
 
 Selecciona 5 publicaciones y que sean las últimas creadas
 // deberían tener fecha los posts para ordenar así
+db.Posts.find().sort({ _id: -1 }).limit(5)
+
 
 Elimina todas las publicaciones que tengan más de un comentario
+db.Posts.deleteMany({comments : {$exists:true}, $where:'this.comments.length>1'})
 
